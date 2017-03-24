@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Torgcrypt</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row">
+	<h1>Torgcrypt</h1>
+	<button>Generera ts tag</button>
+	<p>
+		tag: <span></span>
+		<br>
+		secret: <span></span>
+	</p>
+	</div>
+</div>
+<script src="twist.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/rc4.js"></script>
+<script type="text/javascript">
+	function diffie(gen,secret) {
+		return Math.abs((gen^secret) % 9321478927);
+	}
+
+	function gen_ts_tag() {
+		secret = Math.floor((Math.random() * 1000000000)+1);
+		gen = Math.floor((Math.random() * 9999)+1);
+		pub = diffie(gen,secret);
+		return {"secret" : secret, "tag" : "#torgcrypt "+gen+"-"+pub};
+	}
+
+	function encrypt(ts_tag,message) {
+		secret = Math.floor((Math.random() * 1000000000)+1);
+		ts_tag_data = ts_tag.split("-");
+		gen = parseInt(ts_tag_data[0]);
+		ts_pub = parseInt(ts_tag_data[1]);
+		my_pub = diffie(gen,secret);
+		key = ""+diffie(ts_pub,secret);
+		cipher = CryptoJS.RC4Drop.encrypt(message,key, {drop: 6072000/4});
+		return "#torgcrypt "+my_pub+":"+cipher;
+	}
+
+	function decrypt(enc_message,secret) {
+		info = enc_message.split(":");
+		span_pub = info[0];
+		cipher = info[1];
+		key = ""+diffie(span_pub,secret);
+		return CryptoJS.RC4Drop.decrypt(cipher,key).toString(CryptoJS.enc.Utf8);
+	}
+</script>
+</body>
+</html>
