@@ -70,8 +70,9 @@
 		var output_field = document.getElementById("output");
 		if (secret_field.value === "") {
 			secret = Math.floor((Math.random() * 1000000000)+1);
+		} else {
+			secret = Math.floor(secret_field.value);
 		}
-		secret = Math.floor(secret_field.value);
 		secret_field.value = secret;
 		output_field.innerHTML = encrypt(ts_tag_field.value,message_field.value,secret);
 		document.getElementById("output-panel").style.visibility = "visible";

@@ -15,9 +15,9 @@
 <div class="container">
 	<div class="row">
 		<ul class="nav nav-pills nav-justified">
-			<li role="presentation" class="active"><a href="#">Skapa TS tag</a></li>
+			<li role="presentation"><a href="tag_gen.html">Skapa TS tag</a></li>
 			<li role="presentation"><a href="encrypt.html">Kryptera</a></li>
-			<li role="presentation"><a href="decrypt.html">Dekryptera</a></li>
+			<li role="presentation" class="active"><a href="#">Dekryptera</a></li>
 		</ul>
 		<div class="col-xs-12">
 			<h1>Torgcrypt</h1>
@@ -25,16 +25,21 @@
 
 				<label for="secret">Ditt hemliga nummer</label>
 				<input type="number" name="secret" class="form-control" id="secret" placeholder="lämna tom för ett slumptal">
+				<label for="cipher">taggen i TS jodel</label>
+				<div class="input-group">
+				<span class="input-group-addon">#torgcrypt </span>
+				<input type="text" name="cipher" class="form-control" id="cipher" placeholder="XXXX:XXXXXXXXXXXXXXXXXXXXXXX">
+				</div>
 				<br/>
-				<button class="btn btn-primary btn-lg col-xs-12" onClick="gen_ts_tag()">Generera ts tag</button>
+				<button class="btn btn-primary btn-lg col-xs-12" onClick="decryptFields()">Dekryptera</button>
 			</div>
-			<br/>
+			<br>
 			<div class="row">
-				<div class="panel panel-default" style="visibility:hidden;" id="tag-panel">
+				<div class="panel panel-default" style="visibility:hidden;" id="output-panel">
 					<div class="panel-heading">
-						<h3 class="panel-title">klista detta in din jodel</h3>
+						<h3 class="panel-title">ditt spans kontaktinfo:</h3>
 					</div>
-					<div class="panel-body" id="tag">
+					<div class="panel-body" id="output">
 					</div>
 				</div>
 			</div>
@@ -46,22 +51,28 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="base.js"></script>
 <script type="text/javascript">
-	function gen_ts_tag() {
-		var input = document.getElementById("secret");
-		var output = document.getElementById("tag");
-		if (input.value === "") {
-			console.log("empty field");
-			secret = Math.floor((Math.random() * 1000000000)+1);
+	function decrypt(enc_message,secret) {
+		pattern = /^[A-Za-z0-9_.@öäåÖÄÅ!+-]+$/;
+		info = enc_message.split(":");
+		span_pub = info[0];
+		cipher = info[1];
+		key = ""+diffie(span_pub,secret);
+		return twist.decrypt(pattern,cipher,key);
+	}
+
+	function decryptFields() {
+		var secret_field = document.getElementById("secret");
+		var cipher_field = document.getElementById("cipher");
+		var output_field = document.getElementById("output");
+		if (secret_field.value === "") {
+			alert("Du behöver skriva in ditt hemliga nummer som du använde till att göra taggen");
+			return;
 		} else {
-			secret = Math.floor(input.value);
+			secret = Math.floor(secret_field.value);
 		}
-		input.value = secret;
-		gen = Math.floor((Math.random() * 9999)+1);
-		pub = diffie(gen,secret);
-		document.getElementById("tag-panel").style.visibility = "visible";
-		output.innerHTML = "#torgcrypt " + gen + "-" + pub;
-		document.cookie = "secret=" + secret + ";path=/;";
-		return {"secret" : secret, "tag" : "#torgcrypt " + gen + "-" + pub};
+		secret_field.value = secret;
+		output_field.innerHTML = decrypt(cipher_field.value,secret);
+		document.getElementById("output-panel").style.visibility = "visible";
 	}
 </script>
 </body>
