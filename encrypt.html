@@ -15,23 +15,20 @@
 <div class="container">
 	<div class="row">
 		<ul class="nav nav-pills nav-justified">
-			<li role="presentation"><a href="index.html">Skapa TS tag</a></li>
+			<li role="presentation"><a href="index.html">Generera ts-tagg</a></li>
 			<li role="presentation" class="active"><a href="#">Kryptera</a></li>
 			<li role="presentation"><a href="decrypt.html">Dekryptera</a></li>
 		</ul>
 		<div class="col-xs-12">
 			<h1>Torgcrypt</h1>
 			<div class="row">
-
-				<label for="secret">Ditt hemliga nummer</label>
-				<input type="text" name="secret" class="form-control" id="secret" placeholder="lämna tom för ett slumptal">
-				<label for="ts_tag">taggen i TS jodel</label>
+				<label for="ts_tag">ts-taggen från den du vill ska kunna läsa</label>
 				<div class="input-group">
 				<span class="input-group-addon">#torgcrypt </span>
 				<input type="text" name="ts_tag" class="form-control" id="ts_tag" placeholder="XXXX-XXXXXXXX...">
 				</div>
-				<label for="contact-info">kontaktinfon du vill kryptera (användarnamn, nummer, etc)</label>
-				<input type="text" name="contact-info" class="form-control" id="contact-info" placeholder="glöm inte att berätta för ts vad för sorts kontaktinfo det är.">
+				<label for="message">meddelande</label>
+				<input type="text" name="message" class="form-control" id="message" placeholder="håll det kort">
 				<br/>
 				<button class="btn btn-primary btn-lg col-xs-12" onClick="encryptFields()">Kryptera</button>
 			</div>
@@ -64,16 +61,11 @@
 		return "#torgcrypt "+my_pub+":"+cipher;
 	}
 	function encryptFields() {
-		var secret_field = document.getElementById("secret");
 		var ts_tag_field = document.getElementById("ts_tag");
-		var message_field = document.getElementById("contact-info");
+		var message_field = document.getElementById("message");
 		var output_field = document.getElementById("output");
-		if (secret_field.value === "") {
-			secret_field.value = Math.floor((Math.random() * 1000000000)+1);
-		}
-		secret = stringToIntKey(secret_field.value);
+		secret = (Math.random() * 1000000000)+1;
 		output_field.innerHTML = encrypt(ts_tag_field.value,message_field.value,secret);
-		document.cookie = "secret=" + secret_field.value + ";path=/;";
 		document.getElementById("output-panel").style.visibility = "visible";
 	}
 </script>

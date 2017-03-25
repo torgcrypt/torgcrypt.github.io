@@ -15,7 +15,7 @@
 <div class="container">
 	<div class="row">
 		<ul class="nav nav-pills nav-justified">
-			<li role="presentation"><a href="index.html">Skapa TS tagg</a></li>
+			<li role="presentation"><a href="index.html">Generera ts-tagg</a></li>
 			<li role="presentation"><a href="encrypt.html">Kryptera</a></li>
 			<li role="presentation" class="active"><a href="#">Dekryptera</a></li>
 		</ul>
@@ -23,9 +23,9 @@
 			<h1>Torgcrypt</h1>
 			<div class="row">
 
-				<label for="secret">Ditt hemliga nummer</label>
-				<input type="number" name="secret" class="form-control" id="secret" placeholder="lämna tom för ett slumptal">
-				<label for="cipher">taggen i TS jodel</label>
+				<label for="secret">Lösenord</label>
+				<input type="text" name="secret" class="form-control" id="secret" placeholder="det du skapade ts-taggen med.">
+				<label for="cipher">Det krypterade meddelandet</label>
 				<div class="input-group">
 				<span class="input-group-addon">#torgcrypt </span>
 				<input type="text" name="cipher" class="form-control" id="cipher" placeholder="siffror:tecken">
@@ -37,7 +37,7 @@
 			<div class="row">
 				<div class="panel panel-default" style="visibility:hidden;" id="output-panel">
 					<div class="panel-heading">
-						<h3 class="panel-title">Det dekrypterade meddelandet:</h3>
+						<h3 class="panel-title">Det dekrypterade meddelandet</h3>
 					</div>
 					<div class="panel-body" id="output">
 					</div>
@@ -65,7 +65,7 @@
 		var cipher_field = document.getElementById("cipher");
 		var output_field = document.getElementById("output");
 		if (secret_field.value === "") {
-			alert("Du behöver skriva in ditt lösenord som du använde till att göra ts-taggen");
+			alert("Du behöver skriva in lösenordet, din jävel.");
 			return;
 		}
 		secret = stringToIntKey(secret_field.value);
