@@ -15,7 +15,7 @@
 <div class="container">
 	<div class="row">
 		<ul class="nav nav-pills nav-justified">
-			<li role="presentation"><a href="index.html">Skapa TS tag</a></li>
+			<li role="presentation"><a href="index.html">Skapa TS tagg</a></li>
 			<li role="presentation"><a href="encrypt.html">Kryptera</a></li>
 			<li role="presentation" class="active"><a href="#">Dekryptera</a></li>
 		</ul>
@@ -28,7 +28,7 @@
 				<label for="cipher">taggen i TS jodel</label>
 				<div class="input-group">
 				<span class="input-group-addon">#torgcrypt </span>
-				<input type="text" name="cipher" class="form-control" id="cipher" placeholder="XXXX:XXXXXXXXXXXXXXXXXXXXXXX">
+				<input type="text" name="cipher" class="form-control" id="cipher" placeholder="siffror:tecken">
 				</div>
 				<br/>
 				<button class="btn btn-primary btn-lg col-xs-12" onClick="decryptFields()">Dekryptera</button>
@@ -37,7 +37,7 @@
 			<div class="row">
 				<div class="panel panel-default" style="visibility:hidden;" id="output-panel">
 					<div class="panel-heading">
-						<h3 class="panel-title">ditt spans kontaktinfo:</h3>
+						<h3 class="panel-title">Det dekrypterade meddelandet:</h3>
 					</div>
 					<div class="panel-body" id="output">
 					</div>
@@ -65,14 +65,13 @@
 		var cipher_field = document.getElementById("cipher");
 		var output_field = document.getElementById("output");
 		if (secret_field.value === "") {
-			alert("Du behöver skriva in ditt hemliga nummer som du använde till att göra taggen");
+			alert("Du behöver skriva in ditt lösenord som du använde till att göra ts-taggen");
 			return;
-		} else {
-			secret = Math.floor(secret_field.value);
 		}
-		secret_field.value = secret;
+		secret = stringToIntKey(secret_field.value);
 		output_field.innerHTML = decrypt(cipher_field.value,secret);
 		document.getElementById("output-panel").style.visibility = "visible";
+		document.cookie = "secret=" + secret_field.value + ";path=/;";
 	}
 </script>
 </body>

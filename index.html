@@ -15,7 +15,7 @@
 <div class="container">
 	<div class="row">
 		<ul class="nav nav-pills nav-justified">
-			<li role="presentation" class="active"><a href="#">Skapa TS tag</a></li>
+			<li role="presentation" class="active"><a href="#">Skapa TS tagg</a></li>
 			<li role="presentation"><a href="encrypt.html">Kryptera</a></li>
 			<li role="presentation"><a href="decrypt.html">Dekryptera</a></li>
 		</ul>
@@ -24,7 +24,7 @@
 			<div class="row">
 
 				<label for="secret">Ditt hemliga nummer</label>
-				<input type="number" name="secret" class="form-control" id="secret" placeholder="lämna tom för ett slumptal">
+				<input type="text" name="secret" class="form-control" id="secret" placeholder="lämna tom för ett slumptal">
 				<br/>
 				<button class="btn btn-primary btn-lg col-xs-12" onClick="gen_ts_tag()">Generera ts tag</button>
 			</div>
@@ -47,20 +47,17 @@
 <script src="base.js"></script>
 <script type="text/javascript">
 	function gen_ts_tag() {
-		var input = document.getElementById("secret");
-		var output = document.getElementById("tag");
-		if (input.value === "") {
-			console.log("empty field");
-			secret = Math.floor((Math.random() * 1000000000)+1);
-		} else {
-			secret = Math.floor(input.value);
+		var secret_field = document.getElementById("secret");
+		var output_field = document.getElementById("tag");
+		if (secret_field.value === "") {
+			secret_field.value = Math.floor((Math.random() * 1000000000)+1);
 		}
-		input.value = secret;
+		secret = stringToIntKey(secret_field.value);
 		gen = Math.floor((Math.random() * 9999)+1);
 		pub = diffie(gen,secret);
 		document.getElementById("tag-panel").style.visibility = "visible";
-		output.innerHTML = "#torgcrypt " + gen + "-" + pub;
-		document.cookie = "secret=" + secret + ";path=/;";
+		output_field.innerHTML = "#torgcrypt " + gen + "-" + pub;
+		document.cookie = "secret=" + secret_field.value + ";path=/;";
 		return {"secret" : secret, "tag" : "#torgcrypt " + gen + "-" + pub};
 	}
 </script>

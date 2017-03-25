@@ -24,7 +24,7 @@
 			<div class="row">
 
 				<label for="secret">Ditt hemliga nummer</label>
-				<input type="number" name="secret" class="form-control" id="secret" placeholder="lämna tom för ett slumptal">
+				<input type="text" name="secret" class="form-control" id="secret" placeholder="lämna tom för ett slumptal">
 				<label for="ts_tag">taggen i TS jodel</label>
 				<div class="input-group">
 				<span class="input-group-addon">#torgcrypt </span>
@@ -69,12 +69,11 @@
 		var message_field = document.getElementById("contact-info");
 		var output_field = document.getElementById("output");
 		if (secret_field.value === "") {
-			secret = Math.floor((Math.random() * 1000000000)+1);
-		} else {
-			secret = Math.floor(secret_field.value);
+			secret_field.value = Math.floor((Math.random() * 1000000000)+1);
 		}
-		secret_field.value = secret;
+		secret = stringToIntKey(secret_field.value);
 		output_field.innerHTML = encrypt(ts_tag_field.value,message_field.value,secret);
+		document.cookie = "secret=" + secret_field.value + ";path=/;";
 		document.getElementById("output-panel").style.visibility = "visible";
 	}
 </script>
